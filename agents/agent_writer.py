@@ -26,10 +26,13 @@ def write_analysis_result(model, analysis):
         "analysis_result": analysis
     })
 
+    result_content = result.content
+
     path = "./agent_result/analysis_report.md"
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(result.content, encoding="utf-8")
+    path.write_text(result_content, encoding="utf-8")
 
-    return "The analysis report has been created"
+    print("The analysis report has been created")
+    return result_content
     
