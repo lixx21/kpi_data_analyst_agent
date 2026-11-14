@@ -15,6 +15,7 @@ def write_analysis_result(model, analysis):
     output format:
     - MD file format
     - make it easier to be understand by business stakeholder
+    - provide the supporting data from the analysis result
     - remove the technical explanation or convert it into business explanation
     """
 
