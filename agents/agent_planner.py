@@ -15,7 +15,7 @@ class Plan(BaseModel):
     reasoning: str = Field(description="Short explanation of the reasoning")
     steps: list[Step] = Field(description="Ordered analysis steps, one query per step")
 
-def planner(question):
+def planner(model, question):
     context = Path("data_dictionary.md").read_text(encoding="utf-8")
 
     template = """
@@ -46,7 +46,7 @@ def planner(question):
     
     path = Path("./agent_result/agent_planner_results.json")
     path.parent.mkdir(parents=True, exist_ok=True)   # creates the folder if missing
-    
+
     with open("./agent_result/agent_planner_results.json", "w", encoding="utf-8") as f:
         json.dump(result.model_dump(), f, ensure_ascii=False, indent=2, default=str)  # Use default=str to handle non-serializable objects like datetime
     return result
