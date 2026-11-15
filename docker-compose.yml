@@ -82,6 +82,7 @@ services:
         sleep 5;
       done;
       ollama pull llama3.2;
+      ollama pull qwen2.5-coder;
       echo 'Model downloaded successfully!'
       "
     networks:
@@ -100,6 +101,8 @@ services:
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_HOST: http://ollama:11434
     networks:
       - network
     volumes:
