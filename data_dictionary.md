@@ -1,12 +1,11 @@
 # Procurement Purchase Orders: Data Dictionary and Business Rules
 
 ## 1. Overview
-Table: `purchase_orders`. One row per purchase order (PO) placed with a
+Table: `procurement_kpi`. One row per purchase order (PO) placed with a
 supplier. Use this document to understand column meanings, allowed values,
 KPI formulas and known data quirks. For actual numbers, query the database.
 
-- Table Name: procurement_kpi
-- scheme: public
+- PostgreSQL scheme: public
 
 ## 2. Column Definitions
 
