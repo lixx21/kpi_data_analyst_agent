@@ -6,11 +6,12 @@ from agent_data import get_data_from_steps
 from agent_analyst import analyze_data
 from agent_writer import write_analysis_result
 import streamlit as st
-
+import os
 
 def graph_agent():
-    llama_model = ChatOllama(model="llama3.2:latest", temperature=0)
-    coder_model = ChatOllama(model="qwen2.5-coder", temperature=0)
+    OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434") #for docker. (for non-docker use http://localhost:11434)
+    llama_model = ChatOllama(model="llama3.2:latest", temperature=0, base_url=OLLAMA_URL)
+    coder_model = ChatOllama(model="qwen2.5-coder", temperature=0, base_url=OLLAMA_URL)
 
     class State(TypedDict):
         question: str
@@ -62,10 +63,10 @@ def graph_agent():
 def main(agent_app):
 
     st.set_page_config(
-        page_title='Procurement KPI Analysis'
+        page_title='KPI Analysis Agent'
     )
 
-    st.title("Procurement Analyst Agent")
+    st.title("KPI Analyst Agent")
     question = st.text_input("question")
     
     if st.button("Ask"):
