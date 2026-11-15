@@ -2,24 +2,20 @@
   "hypothesis": "The supplier with the highest defect rate in Raw Materials is Delta_Logistics.",
   "assumptions": [
     "Raw Materials is a specific category of items",
-    "Defect rate is a relevant KPI for this category"
+    "Defect rate is a relevant KPI for this analysis"
   ],
-  "reasoning": "Based on the provided data, Delta_Logistics is one of the suppliers listed in the Raw Materials category. To confirm this hypothesis, I would test it by running a SQL query to calculate the defect rate for each supplier in Raw Materials and then comparing the results. Here's a step-by-step plan for the analysis: 1. Run a SQL query to count the number of defective units for each supplier in Raw Materials: `SELECT Supplier, COUNT(CASE WHEN Item_Category = 'Raw Materials' AND Defective_Units IS NOT NULL THEN Defective_Units END) AS Defective_Units FROM purchase_orders GROUP BY Supplier;` 2. Run another SQL query to calculate the defect rate for each supplier in Raw Materials: `SELECT Supplier, COUNT(CASE WHEN Item_Category = 'Raw Materials' AND Defective_Units IS NOT NULL THEN Defective_Units END) AS Defective_Units, COUNT(CASE WHEN Item_Category = 'Raw Materials' THEN 1 END) AS Total_Orders FROM purchase_orders GROUP BY Supplier;` 3. Run a SQL query to calculate the defect rate for each supplier in Raw Materials: `SELECT Supplier, Defective_Units / Total_Orders AS Defect_Rate FROM (SELECT Supplier, COUNT(CASE WHEN Item_Category = 'Raw Materials' AND Defective_Units IS NOT NULL THEN Defective_Units END) AS Defective_Units, COUNT(CASE WHEN Item_Category = 'Raw Materials' THEN 1 END) AS Total_Orders FROM purchase_orders GROUP BY Supplier) AS subquery;` 4. Run a SQL query to rank the suppliers by their defect rate in Raw Materials: `SELECT Supplier, Defect_Rate FROM (SELECT Supplier, Defective_Units / Total_Orders AS Defect_Rate FROM (SELECT Supplier, COUNT(CASE WHEN Item_Category = 'Raw Materials' AND Defective_Units IS NOT NULL THEN Defective_Units END) AS Defective_Units, COUNT(CASE WHEN Item_Category = 'Raw Materials' THEN 1 END) AS Total_Orders FROM purchase_orders GROUP BY Supplier) AS subquery) AS subquery2 ORDER BY Defect_Rate DESC;` 5. Compare the results with the supplier list to confirm the hypothesis. If the results match, then Delta_Logistics is the supplier with the highest defect rate in Raw Materials.",
+  "reasoning": "Based on the provided data, Delta_Logistics is one of the suppliers listed in the Item_Category column. Given that the Raw Materials category is a specific subset of items, it is reasonable to assume that Delta_Logistics, as a supplier in this category, would have a notable defect rate. Additionally, the KPI definitions suggest that defect rate is a relevant metric for evaluating supplier performance, which supports this hypothesis.",
   "steps": [
     {
-      "goal": "Run a SQL query to count the number of defective units for each supplier in Raw Materials",
+      "goal": "Get the list of suppliers in Raw Materials category",
       "needs_sql": true
     },
     {
-      "goal": "Run a SQL query to calculate the defect rate for each supplier in Raw Materials",
+      "goal": "Get the defect rate for each supplier in Raw Materials category",
       "needs_sql": true
     },
     {
-      "goal": "Run a SQL query to rank the suppliers by their defect rate in Raw Materials",
-      "needs_sql": true
-    },
-    {
-      "goal": "Compare the results with the supplier list to confirm the hypothesis",
+      "goal": "Identify the supplier with the highest defect rate",
       "needs_sql": true
     }
   ]

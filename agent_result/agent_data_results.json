@@ -1,33 +1,28 @@
 [
   {
     "step": 1,
-    "goal": "Run a SQL query to count the number of defective units for each supplier in Raw Materials",
+    "goal": "Get the list of suppliers in Raw Materials category",
     "sql_result": [
       {
-        "Supplier": "Alpha_Inc",
-        "Total_Defective_Units": 322.0
+        "Supplier": "Alpha_Inc"
       },
       {
-        "Supplier": "Gamma_Co",
-        "Total_Defective_Units": 1534.0
+        "Supplier": "Gamma_Co"
       },
       {
-        "Supplier": "Beta_Supplies",
-        "Total_Defective_Units": 2756.0
+        "Supplier": "Beta_Supplies"
       },
       {
-        "Supplier": "Epsilon_Group",
-        "Total_Defective_Units": 449.0
+        "Supplier": "Epsilon_Group"
       },
       {
-        "Supplier": "Delta_Logistics",
-        "Total_Defective_Units": 4581.0
+        "Supplier": "Delta_Logistics"
       }
     ]
   },
   {
     "step": 2,
-    "goal": "Run a SQL query to calculate the defect rate for each supplier in Raw Materials",
+    "goal": "Get the defect rate for each supplier in Raw Materials category",
     "sql_result": [
       {
         "Supplier": "Alpha_Inc",
@@ -53,53 +48,11 @@
   },
   {
     "step": 3,
-    "goal": "Run a SQL query to rank the suppliers by their defect rate in Raw Materials",
+    "goal": "Identify the supplier with the highest defect rate",
     "sql_result": [
       {
         "Supplier": "Delta_Logistics",
-        "Defect_Rate": 0.1110682607018897
-      },
-      {
-        "Supplier": "Beta_Supplies",
-        "Defect_Rate": 0.07478197674418605
-      },
-      {
-        "Supplier": "Gamma_Co",
-        "Defect_Rate": 0.04666645631527467
-      },
-      {
-        "Supplier": "Alpha_Inc",
-        "Defect_Rate": 0.01978467561521253
-      },
-      {
-        "Supplier": "Epsilon_Group",
-        "Defect_Rate": 0.015693430656934307
-      }
-    ]
-  },
-  {
-    "step": 4,
-    "goal": "Compare the results with the supplier list to confirm the hypothesis",
-    "sql_result": [
-      {
-        "Supplier": "Delta_Logistics",
-        "Average_Savings": -4.316774193548387
-      },
-      {
-        "Supplier": "Alpha_Inc",
-        "Average_Savings": -4.6803906249999985
-      },
-      {
-        "Supplier": "Beta_Supplies",
-        "Average_Savings": -4.692253521126757
-      },
-      {
-        "Supplier": "Gamma_Co",
-        "Average_Savings": -4.695912408759122
-      },
-      {
-        "Supplier": "Epsilon_Group",
-        "Average_Savings": -4.8528289473684225
+        "Defect_Rate": 0.1082637528777102
       }
     ]
   }
