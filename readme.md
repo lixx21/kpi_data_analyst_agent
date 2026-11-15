@@ -44,3 +44,62 @@ All agents share one state object (`question`, `plan`, `sql_data`, `analysis`, `
 - **Structured output:** Pydantic models
 - **UI:** Streamlit
 - **Packaging:** Docker Compose
+
+## Getting Started
+### Prerequisites
+
+- [Ollama](https://ollama.com) installed and running
+- Python 3.11+ (or Docker)
+
+### Pull the models
+
+```bash
+ollama pull llama3.2
+ollama pull qwen2.5-coder
+```
+
+### Run locally
+
+```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
+
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+streamlit run app.py
+```
+
+### Run with Docker
+
+<!-- TODO: confirm the Ollama setup in your compose file -->
+```bash
+docker compose up --build
+```
+
+Then open <http://localhost:8501>.
+
+## Limitations
+
+Being upfront about what v1 does not do yet:
+
+- **No accuracy evaluation yet.** There is no benchmark, so I make no accuracy claims.
+- **Small local models make mistakes.** For example, the planner sometimes proposes a wrong defect-rate formula (counting rows instead of summing defective units). Always check the SQL and the numbers.
+- **Linear workflow.** The agents run in a fixed order (planner → data → analyst → writer). There is no critic or retry loop, so a bad query is not corrected automatically.
+- **Single table.** The agent is built around one `procurement_kpi` table.
+- **Not production-ready.** This is a portfolio project for learning and demonstration.
+
+## Roadmap
+
+- [ ] Evaluation set (20 to 30 questions with known answers) and model comparison
+- [ ] Critic node with a capped retry loop
+- [ ] SQL error recovery (send errors back to the SQL writer)
+- [ ] SQL guardrails: SELECT-only validation, table allowlist, row limits
+- [ ] RAG over the data dictionary and other documents
+- [ ] Tracing with Langfuse
+- [ ] Multiple tables and richer analysis (statistical tests, charts)
+
+## Author
+
+**Felix**, data analytics engineer
