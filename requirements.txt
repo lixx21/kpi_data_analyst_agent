@@ -5,3 +5,7 @@ langchain-ollama
 tensorflow
 langgraph
 python-dotenv
+streamlit
+ollama
+sqlalchemy
+psycopg[binary]
