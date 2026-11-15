@@ -4,3 +4,4 @@ langchain
 langchain-ollama
 tensorflow
 langgraph
+python-dotenv
