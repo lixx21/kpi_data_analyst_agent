@@ -80,6 +80,7 @@ def get_data_from_steps(model, plan):
                     result_save.append({
                             'step': i+1,
                             'goal': step.goal,
+                            'query': clean_sql,
                             'sql_result': df
                         })
                     break  # Exit the loop if successful
@@ -97,6 +98,7 @@ def get_data_from_steps(model, plan):
                         result_save.append({
                             'step': i+1,
                             'goal': step.goal,
+                            'query': clean_sql,
                             'sql_result': df
                         })
                         print(f"query step {i+1} (attempt {attempt + 2}): {result.content}")

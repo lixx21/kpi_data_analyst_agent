@@ -43,4 +43,4 @@ def analyze_data(model, question, plan_data, sql_data):
     with open("./agent_result/agent_analysis_results.json", "w", encoding="utf-8") as f:
         json.dump(json_output, f, ensure_ascii=False, indent=2, default=str)  # Use default=str to handle non-serializable objects like datetime
 
-    return analysis_result
+    return json_output
