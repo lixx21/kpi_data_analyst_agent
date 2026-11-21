@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL",
+  "issues": [
+    "Step 1: Get the count of orders with Defective_Units for Delta_Logistics and Raw Materials. Query: SELECT COUNT(*) FROM public.procurement_kpi WHERE \"Supplier\" = 'Delta_Logistics' AND \"Item_Category\" = 'Raw Materials' AND \"Defective_Units\" IS NOT NULL;",
+    "Step 2: Get the count of orders with Defective_Units for all suppliers and Raw Materials. Query: SELECT \"Supplier\", COUNT(\"Defective_Units\") AS \"Defective_Units_Count\" FROM public.procurement_kpi WHERE \"Item_Category\" = 'Raw Materials' GROUP BY \"Supplier\";",
+    "Step 3: Calculate the defect rate for Delta_Logistics and all suppliers in Raw Materials. Query: SELECT COALESCE(SUM(\"Defective_Units\") / SUM(\"Quantity\"), 0) AS \"Defect_Rate\" FROM public.procurement_kpi WHERE \"Item_Category\" = 'Raw Materials' GROUP BY \"Supplier\";",
+    "Step 4: Calculate the defect rate for all suppliers in Raw Materials. Query: SELECT COALESCE(SUM(\"Defective_Units\") / SUM(\"Quantity\"), 0) AS \"Defect_Rate\" FROM public.procurement_kpi WHERE \"Item_Category\" = 'Raw Materials' AND \"Order_Status\" IN ('Delivered', 'Partially Delivered') GROUP BY \"Supplier\";",
+    "Step 5: Compare the defect rates for Delta_Logistics and all suppliers in Raw Materials. Query: SELECT COALESCE(SUM(\"Defective_Units\") / SUM(\"Quantity\"), 0) AS \"Defect_Rate\" FROM public.procurement_kpi WHERE \"Item_Category\" = 'Raw Materials' AND \"Order_Status\" IN ('Delivered', 'Partially Delivered') GROUP BY \"Supplier\";"
+  ],
+  "next_action": "Step 1: Get the count of orders with Defective_Units for Delta_Logistics and Raw Materials. Query: SELECT COUNT(*) FROM public.procurement_kpi WHERE \"Supplier\" = 'Delta_Logistics' AND \"Item_Category\" = 'Raw Materials' AND \"Defective_Units\" IS NOT NULL;"
+}

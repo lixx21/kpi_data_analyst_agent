@@ -1,28 +1,72 @@
 [
   {
     "step": 1,
-    "goal": "Get the list of suppliers in Raw Materials category",
+    "goal": "Get the count of orders with Defective_Units for Delta_Logistics and Raw Materials.",
+    "query": "SELECT COUNT(*) \nFROM public.procurement_kpi \nWHERE \"Supplier\" = 'Delta_Logistics' \n  AND \"Item_Category\" = 'Raw Materials' \n  AND \"Defective_Units\" IS NOT NULL;",
     "sql_result": [
       {
-        "Supplier": "Alpha_Inc"
-      },
-      {
-        "Supplier": "Gamma_Co"
-      },
-      {
-        "Supplier": "Beta_Supplies"
-      },
-      {
-        "Supplier": "Epsilon_Group"
-      },
-      {
-        "Supplier": "Delta_Logistics"
+        "count": 27
       }
     ]
   },
   {
     "step": 2,
-    "goal": "Get the defect rate for each supplier in Raw Materials category",
+    "goal": "Get the count of orders with Defective_Units for all suppliers and Raw Materials.",
+    "query": "SELECT \"Supplier\", COUNT(\"Defective_Units\") AS \"Defective_Units_Count\"\nFROM public.procurement_kpi\nWHERE \"Item_Category\" = 'Raw Materials'\nGROUP BY \"Supplier\";",
+    "sql_result": [
+      {
+        "Supplier": "Alpha_Inc",
+        "Defective_Units_Count": 17
+      },
+      {
+        "Supplier": "Gamma_Co",
+        "Defective_Units_Count": 31
+      },
+      {
+        "Supplier": "Beta_Supplies",
+        "Defective_Units_Count": 24
+      },
+      {
+        "Supplier": "Epsilon_Group",
+        "Defective_Units_Count": 16
+      },
+      {
+        "Supplier": "Delta_Logistics",
+        "Defective_Units_Count": 27
+      }
+    ]
+  },
+  {
+    "step": 3,
+    "goal": "Calculate the defect rate for Delta_Logistics and all suppliers in Raw Materials.",
+    "query": "SELECT \n    \"Supplier\", \n    COALESCE(SUM(\"Defective_Units\") / SUM(\"Quantity\"), 0) AS \"Defect_Rate\"\nFROM \n    public.procurement_kpi\nWHERE \n    \"Item_Category\" = 'Raw Materials'\nGROUP BY \n    \"Supplier\";",
+    "sql_result": [
+      {
+        "Supplier": "Alpha_Inc",
+        "Defect_Rate": 0.019767941555651054
+      },
+      {
+        "Supplier": "Gamma_Co",
+        "Defect_Rate": 0.045384615384615384
+      },
+      {
+        "Supplier": "Beta_Supplies",
+        "Defect_Rate": 0.07921588916673852
+      },
+      {
+        "Supplier": "Epsilon_Group",
+        "Defect_Rate": 0.017759670912111385
+      },
+      {
+        "Supplier": "Delta_Logistics",
+        "Defect_Rate": 0.11148697980043806
+      }
+    ]
+  },
+  {
+    "step": 4,
+    "goal": "Calculate the defect rate for all suppliers in Raw Materials.",
+    "query": "SELECT \n    \"Supplier\", \n    COALESCE(SUM(\"Defective_Units\") / SUM(\"Quantity\"), 0) AS \"Defect_Rate\"\nFROM \n    public.procurement_kpi\nWHERE \n    \"Item_Category\" = 'Raw Materials' \n    AND \"Order_Status\" IN ('Delivered', 'Partially Delivered')\nGROUP BY \n    \"Supplier\";",
     "sql_result": [
       {
         "Supplier": "Alpha_Inc",
@@ -47,12 +91,29 @@
     ]
   },
   {
-    "step": 3,
-    "goal": "Identify the supplier with the highest defect rate",
+    "step": 5,
+    "goal": "Compare the defect rates for Delta_Logistics and all suppliers in Raw Materials.",
+    "query": "SELECT \n    \"Supplier\", \n    COALESCE(SUM(\"Defective_Units\") / SUM(\"Quantity\"), 0) AS \"Defect_Rate\"\nFROM \n    public.procurement_kpi\nWHERE \n    \"Item_Category\" = 'Raw Materials' \n    AND \"Order_Status\" IN ('Delivered', 'Partially Delivered')\nGROUP BY \n    \"Supplier\";",
     "sql_result": [
       {
+        "Supplier": "Alpha_Inc",
+        "Defect_Rate": 0.01978467561521253
+      },
+      {
+        "Supplier": "Gamma_Co",
+        "Defect_Rate": 0.04666645631527467
+      },
+      {
+        "Supplier": "Beta_Supplies",
+        "Defect_Rate": 0.07478197674418605
+      },
+      {
+        "Supplier": "Epsilon_Group",
+        "Defect_Rate": 0.015693430656934307
+      },
+      {
         "Supplier": "Delta_Logistics",
-        "Defect_Rate": 0.1082637528777102
+        "Defect_Rate": 0.1110682607018897
       }
     ]
   }
