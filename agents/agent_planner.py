@@ -34,7 +34,6 @@ def planner(model, question):
 
     prompt = ChatPromptTemplate.from_template(template)
 
-    model = ChatOllama(model="llama3.2:latest", temperature=0)
     structured_model = model.with_structured_output(Plan)   # forces the Plan shape
 
     chain = prompt | structured_model
