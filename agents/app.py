@@ -5,11 +5,13 @@ from agent_planner import planner
 from agent_data import get_data_from_steps
 from agent_analyst import analyze_data
 from agent_writer import write_analysis_result
+from agent_reviewer import reviewer
 import streamlit as st
 import os
 
 def graph_agent():
-    OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434") #for docker. (for non-docker use http://localhost:11434)
+    OLLAMA_URL= os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    # OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434") #for docker. (for non-docker use http://localhost:11434)
     llama_model = ChatOllama(model="llama3.2:latest", temperature=0, base_url=OLLAMA_URL)
     coder_model = ChatOllama(model="qwen2.5-coder", temperature=0, base_url=OLLAMA_URL)
 
@@ -18,11 +20,17 @@ def graph_agent():
         plan: Any
         sql_data: Any
         analysis: Any
+        review: Any
+        feedback: str
+        loop_count: int 
         report: Any
 
     def planner_node(state: State):
         print('planning analysis...')
-        plan = planner(llama_model, state['question'])
+        q = state['question']
+        if state.get("feedback"):
+            q += f"\n\nPrevious attempt feedback: {state['feedback']}"
+        plan = planner(llama_model, q)
 
         return {'plan': plan}
 
@@ -38,9 +46,26 @@ def graph_agent():
 
         return {'analysis': analysis_result}
 
+    def critic_node(state: State):
+        review = reviewer(llama_model, state['analysis'])
+        feedback = ""
+        if review.verdict == "FAIL":
+            feedback = (f"A reviewer found these problems: {review.issues}. "
+                        f"Fix this: {review.next_action}")
+        return {
+            "review": review,
+            "feedback": feedback,
+            "loop_count": state.get("loop_count", 0) + 1
+        }
+
+    def route_after_critic(state: State):
+        if state["review"].verdict == "PASS" or state["loop_count"] >= 3:
+            return "writer"
+        return "planner" 
+
     def writer_node(state: State):
         print('Write analysis report...')
-        report = write_analysis_result(llama_model, state['analysis'])
+        report = write_analysis_result(llama_model, state['analysis']['analysis_result'])
 
         return {'report': report}
 
@@ -48,12 +73,17 @@ def graph_agent():
     graph.add_node('planner', planner_node)
     graph.add_node('data', data_node)
     graph.add_node('analyst', analyst_node)
+    graph.add_node('critic', critic_node)
     graph.add_node('writer', writer_node)
 
     graph.add_edge(START, 'planner')
     graph.add_edge('planner', 'data')
     graph.add_edge('data', 'analyst')
-    graph.add_edge('analyst', 'writer')
+    graph.add_edge("analyst", "critic")            # replaces analyst -> writer
+    graph.add_conditional_edges(
+        "critic", route_after_critic,
+        {"writer": "writer", "planner": "planner"},
+    )
     graph.add_edge('writer', END)
 
     agent_app = graph.compile()
@@ -73,10 +103,16 @@ def main(agent_app):
         final_state = {"question": question}
     # question = "Which supplier has the highest defect rate in Raw Materials?"
         with st.status("⏳Analyzing data...", expanded=True) as status:
+
             for event in agent_app.stream({"question": question}):
+
                 for node_name, state in event.items():
                     st.write(f"Agent {node_name} done ✅")
+                    if node_name == 'critic':
+                        review = state['review']
+                        st.write(f"Verdict: {review.verdict} | Issues: {review.issues}")
                     final_state.update(state)
+
             status.update(label="Analysis complete", state="complete", expanded=False)
     # final_state = app.invoke({'question': question})
         st.subheader('Analysis Report:')
